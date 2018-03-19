@@ -1,1 +1,5 @@
+dist
 web-ext-artifacts
+manifest-chrome.json
+manifest-firefox.json
+*.cmd

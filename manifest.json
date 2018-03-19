@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Activate Left Tab On Close",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "When the currently active tab is closed, always switch to the one on the left of it.",
 	"icons": {
 		"48": "icons/icon-48.png",
@@ -11,7 +11,7 @@
 	"homepage_url": "https://github.com/rotemdan/ActivateLeftTabOnClose",
 	"background": {
 		"scripts": [
-			"browser-polyfill.js",
+			"browser-polyfill.min.js",
 			"common.js",
 			"background.js"
 		]
