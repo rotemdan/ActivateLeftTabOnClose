@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Activate Left Tab On Close",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"description": "When the currently active tab is closed, always switch to the one on the left of it.",
 	"icons": {
 		"48": "icons/icon-48.png",
