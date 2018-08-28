@@ -15,7 +15,7 @@ async function onRemoved(removedTabId, removeInfo) {
 	})[0];
 
 	if (matchingTabInfo) {
-		log("Removed tab matches critria for left tab activation.");
+		log("Removed tab matches criteria for left tab activation.");
 
 		const tabToTheLeftInfo = tabStateSnapshot.filter((tabInfo) => {
 			return tabInfo.windowId == matchingTabInfo.windowId &&
