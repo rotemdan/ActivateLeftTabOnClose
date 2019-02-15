@@ -41,5 +41,5 @@ browser.tabs.onHighlighted.addListener(updateTabStateSnapshot);
 browser.tabs.onMoved.addListener(updateTabStateSnapshot);
 browser.tabs.onRemoved.addListener(onRemoved);
 browser.tabs.onReplaced.addListener(updateTabStateSnapshot);
-//browser.tabs.onUpdated.addListener(updateTabStateSnapshot);
+browser.tabs.onUpdated.addListener(updateTabStateSnapshot);
 //browser.tabs.onZoomChange.addListener(updateTabStateSnapshot);
