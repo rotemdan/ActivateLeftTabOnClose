@@ -43,3 +43,5 @@ browser.tabs.onRemoved.addListener(onRemoved);
 browser.tabs.onReplaced.addListener(updateTabStateSnapshot);
 browser.tabs.onUpdated.addListener(updateTabStateSnapshot);
 //browser.tabs.onZoomChange.addListener(updateTabStateSnapshot);
+
+setInterval(updateTabStateSnapshot, 100);
