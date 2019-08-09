@@ -4,27 +4,25 @@ async function onTabsUpdated() {
 	tabStateSnapshot = await browser.tabs.query({ windowType: "normal" });
 
 	if (typeof browser.tabs.moveInSuccession === 'function') {
-		const currentTabInfo = tabStateSnapshot.filter((tabInfo) => {
+		const activeTabInfos = tabStateSnapshot.filter((tabInfo) => {
 			return tabInfo.active === true
-		})[0];
+		});
 
-		if (!currentTabInfo) {
-			return;
-		}
+		for (activeTabInfo of activeTabInfos) {
+			const successorTabIndex = activeTabInfo.index === 0 ? 1 : activeTabInfo.index - 1;
 
-		const successorTabIndex = currentTabInfo.index === 0 ? 1 : currentTabInfo.index - 1;
+			const successorTabInfo = tabStateSnapshot.filter((tabInfo) => {
+				return tabInfo.windowId === activeTabInfo.windowId &&
+					tabInfo.index === successorTabIndex;
+			})[0];
 
-		const successorTabInfo = tabStateSnapshot.filter((tabInfo) => {
-			return tabInfo.windowId === currentTabInfo.windowId &&
-				tabInfo.index === successorTabIndex;
-		})[0];
+			if (!successorTabInfo) {
+				return;
+			}
 
-		if (!successorTabInfo) {
-			return;
-		}
-
-		if (currentTabInfo.successorTabId !== successorTabInfo.id) {
-			await browser.tabs.update(currentTabInfo.id, { successorTabId: successorTabInfo.id });
+			if (activeTabInfo.successorTabId !== successorTabInfo.id) {
+				await browser.tabs.update(activeTabInfo.id, { successorTabId: successorTabInfo.id });
+			}
 		}
 	}
 }
