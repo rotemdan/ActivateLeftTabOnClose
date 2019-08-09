@@ -12,17 +12,19 @@ async function onTabsUpdated() {
 			return;
 		}
 
-		const tabToTheLeftInfo = tabStateSnapshot.filter((tabInfo) => {
-			return tabInfo.windowId == currentTabInfo.windowId &&
-				tabInfo.index == currentTabInfo.index - 1;
+		const successorTabIndex = currentTabInfo.index === 0 ? 1 : currentTabInfo.index - 1;
+
+		const successorTabInfo = tabStateSnapshot.filter((tabInfo) => {
+			return tabInfo.windowId === currentTabInfo.windowId &&
+				tabInfo.index === successorTabIndex;
 		})[0];
 
-		if (!tabToTheLeftInfo) {
+		if (!successorTabInfo) {
 			return;
 		}
 
-		if (currentTabInfo.successorTabId !== tabToTheLeftInfo.id) {
-			await browser.tabs.update(currentTabInfo.id, { successorTabId: tabToTheLeftInfo.id });
+		if (currentTabInfo.successorTabId !== successorTabInfo.id) {
+			await browser.tabs.update(currentTabInfo.id, { successorTabId: successorTabInfo.id });
 		}
 	}
 }
@@ -31,27 +33,26 @@ async function onTabRemoved(removedTabId, removeInfo) {
 	log("onTabRemoved:", removedTabId, removeInfo);
 
 	const matchingTabInfo = tabStateSnapshot.filter((tabInfo) => {
-		return tabInfo.active == true &&
-			tabInfo.id == removedTabId &&
-			tabInfo.windowId == removeInfo.windowId &&
-			tabInfo.index > 0;
+		return tabInfo.active === true &&
+			tabInfo.id === removedTabId &&
+			tabInfo.windowId === removeInfo.windowId
 	})[0];
 
 	if (matchingTabInfo) {
-		log("Removed tab matches criteria for left tab activation.");
+		log("Removed tab matches criteria for forced activation.");
 
-		const tabToTheLeftInfo = tabStateSnapshot.filter((tabInfo) => {
-			return tabInfo.windowId == matchingTabInfo.windowId &&
-				tabInfo.index == matchingTabInfo.index - 1;
+		const successorTabIndex = matchingTabInfo.index === 0 ? 1 : matchingTabInfo.index - 1;
+
+		const successorTabInfo = tabStateSnapshot.filter((tabInfo) => {
+			return tabInfo.windowId === matchingTabInfo.windowId &&
+				tabInfo.index === successorTabIndex;
 		})[0];
 
-		if (tabToTheLeftInfo) {
-			if (tabToTheLeftInfo.active === false) {
-				await browser.tabs.update(tabToTheLeftInfo.id, { active: true });
-				log(`Activated tab ${tabToTheLeftInfo.id} in window ${tabToTheLeftInfo.windowId}.`);
-			}
+		if (successorTabInfo) {
+			await browser.tabs.update(successorTabInfo.id, { active: true });
+			log(`Activated tab ${successorTabInfo.id} in window ${successorTabInfo.windowId}.`);
 		} else {
-			log(`No matching tab to the left was found.`);
+			log(`No matching successor tab was found.`);
 		}
 	}
 
